@@ -13,24 +13,18 @@ const locationMessageTemplate = document.querySelector("#location-message-templa
 const sidebarTemplate = document.querySelector("#sidebar-template").innerHTML;
 
 // Options
-const { username, room } = Qs.parse(location.search, { ignoreQueryPrefix: true });
+let { username, room } = Qs.parse(location.search, { ignoreQueryPrefix: true });
+
+// Force room to be "nexus" no matter what is entered
+room = "nexus";
 
 const autoscroll = () => {
-  // New message element
   const $newMessage = $messages.lastElementChild;
-
-  // Height of the new message
   const newMessageStyles = getComputedStyle($newMessage);
   const newMessageMargin = parseInt(newMessageStyles.marginBottom);
   const newMessageHeight = $newMessage.offsetHeight + newMessageMargin;
-
-  // Visible height
   const visibleHeight = $messages.offsetHeight;
-
-  // Height of messages container
   const containerHeight = $messages.scrollHeight;
-
-  // How far have I scrolled?
   const scrollOffset = $messages.scrollTop + visibleHeight;
 
   if (containerHeight - newMessageHeight <= scrollOffset) {
@@ -50,7 +44,6 @@ socket.on("message", message => {
 });
 
 socket.on("locationMessage", message => {
-  console.log(message);
   const html = Mustache.render(locationMessageTemplate, {
     username: message.username,
     url: message.url,
